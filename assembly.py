@@ -1,19 +1,4 @@
 
-
-# def check_offset(parameter, PC):
-#     print(parameter)
-#     for i in range(0, len(parameter)):
-#         print(i)
-#         print(parameter[i])
-#         check_arr.append(parameter[i])
-#         # if not (parameter[i].isdigit()):
-#         #     fill_arr.append(parameter[4])
-#         print(check_arr)
-#         if(parameter[1] == ".fill"):
-#             fill_arr.append(parameter[0] + ' ' + parameter[2])
-
-#         print(fill_arr)
-
 import re
 check_arr = []
 fill_arr = []
@@ -38,6 +23,23 @@ def storelabel():
     # print('five' in label_addr)  # check statement
 
     return label_addr
+
+
+def twocompliment_16bit(num):
+    if num < 0:
+        if num >= -32768:
+            negative_num = -1 * num
+            compliment = (bin((32767 - negative_num + 1)))[2:].zfill(15)
+            two_compliment = '1'+compliment
+            return two_compliment
+        else:
+            raise ValueError("underflow")
+    else:
+        two_compliment = bin(num)[2:].zfill(16)
+        if num < 32768:
+            return two_compliment
+        else:
+            raise ValueError("overflow")
 
 
 def Assembly(parameter, reg, PC):
@@ -70,14 +72,25 @@ def Assembly(parameter, reg, PC):
         elif(parameter[1] == "beq"):
             opcode = "100"
 
-        if not (parameter[4].isdigit()):
-            sym = offset
-            addr_label = storelabel()[sym]
-            print(addr_label)
+        if not (parameter[4].lstrip('-').isdigit()):
+            addr_label = storelabel()[offset]
             bin_addr_label = bin((addr_label))[2:].zfill(16)
-            print(bin((addr_label))[2:].zfill(16))
+            Mech = (
+                opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
 
-     # J type
+        else:
+            if(parameter[1] == "beq"):
+                beq_to = int(parameter[4])+PC+1
+                Mech = (
+                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(beq_to))
+            elif(parameter[1] == "lw" or parameter[1] == "sw"):
+                Mech = (
+                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(int(parameter[4])))
+
+    # J type
     elif parameter[1] == "jalr":
         instru = parameter[1]
         regA = parameter[2]
@@ -95,3 +108,10 @@ def Assembly(parameter, reg, PC):
             opcode = "111"
         Mech = (opcode + "0000000000000000000000")
         return Mech
+    elif parameter[1] == ".fill":
+        fill_addr = parameter[2]
+        if not(fill_addr.lstrip('-').isdigit()):
+            addr_label = storelabel()[fill_addr]
+            return addr_label
+        else:
+            return fill_addr
