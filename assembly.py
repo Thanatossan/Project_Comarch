@@ -42,7 +42,7 @@ def twocompliment_16bit(num):
             raise ValueError("overflow")
 
 
-def Assembly(parameter, reg, PC):
+def Assembly(parameter, mem, PC):
 
     # R type
     if parameter[1] == "add" or parameter[1] == "nand":
@@ -75,20 +75,31 @@ def Assembly(parameter, reg, PC):
         if not (parameter[4].lstrip('-').isdigit()):
             addr_label = storelabel()[offset]
             bin_addr_label = bin((addr_label))[2:].zfill(16)
-            Mech = (
-                opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
-
-        else:
-            if(parameter[1] == "beq"):
-                beq_to = int(parameter[4])+PC+1
+            if(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (
                     opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(beq_to))
+                    bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
+                return Mech
+            elif(parameter[1] == "beq"):
+                if(addr_label < PC):
+                    # in case of addr_label is above current
+                    addr_label = (addr_label * (-1)) - 1
+                Mech = (
+                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label))
+                return Mech
+        elif(parameter[4].isdigit()):
+
+            if(parameter[1] == "beq"):
+                Mech = (
+                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(int(parameter[4])))
+                return Mech
             elif(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (
                     opcode + bin(int(parameter[2]))[2:].zfill(3) +
                     bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(int(parameter[4])))
+                return Mech
 
     # J type
     elif parameter[1] == "jalr":
@@ -100,14 +111,17 @@ def Assembly(parameter, reg, PC):
         Mech = (opcode+bin(int(parameter[2]))[2:].zfill(3) +
                 bin(int(parameter[3]))[2:].zfill(3) + "0000000000000000")
         return Mech
+
     # O type
     elif parameter[1] == "halt" or parameter[1] == "noop":
         if(parameter[1] == "halt"):
             opcode = "110"
         elif(parameter[1] == "noop"):
             opcode = "111"
+
         Mech = (opcode + "0000000000000000000000")
         return Mech
+
     elif parameter[1] == ".fill":
         fill_addr = parameter[2]
         if not(fill_addr.lstrip('-').isdigit()):

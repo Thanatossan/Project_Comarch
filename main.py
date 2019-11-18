@@ -21,11 +21,16 @@ PC = 0
 while PC < len(line_arr):
     parameter = re.split(r"\s+", line_arr[PC], 5)
     # print(parameter)
-    # convert whole inst to machineCode and store memory
     # check_offset(parameter, PC)
     # # checkoffset(parameter, PC)
-    Assembly(parameter, reg, PC)
-  #  print(parameter)
+    mem[PC] = Assembly(parameter, mem, PC)
+    # print(mem[PC])
+    #  print(parameter)
     # print(PC)
+    if(parameter[1] == ".fill"):
+
+        print("memory[" + (str(PC)) + "]=" + str(int(mem[PC])))
+    else:
+        print("memory[" + (str(PC)) + "]=" + str(int(mem[PC], 2)))
 
     PC += 1
