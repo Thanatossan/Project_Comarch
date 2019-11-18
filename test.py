@@ -10,6 +10,7 @@ for line in f2:
             label_addr[test1[0]] = c
         else:
             raise ValueError('Duplicate label >> ' + test1[0])
-    print(c)
     print(label_addr)
+    print(label_addr.keys())
+    print('five' in label_addr)
     c += 1

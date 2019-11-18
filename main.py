@@ -26,6 +26,6 @@ while PC < len(line_arr):
     # # checkoffset(parameter, PC)
     Assembly(parameter, reg, PC)
   #  print(parameter)
-    print(PC)
+    # print(PC)
 
     PC += 1
