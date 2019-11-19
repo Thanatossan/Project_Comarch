@@ -1,5 +1,6 @@
 import re  # RegEx
-from assembly import Assembly
+from assembler import Assembly
+from simulator import simulator
 line_arr = []
 with open('test.txt', 'r') as f:
     for line in f:
@@ -12,7 +13,7 @@ for i in range(0, len(line_arr)):
 
 
 reg = []
-for i in range(0, len(line_arr)):
+for i in range(0, 8):
     reg.append(0)
    # print(reg)
 
@@ -24,13 +25,18 @@ while PC < len(line_arr):
     # check_offset(parameter, PC)
     # # checkoffset(parameter, PC)
     mem[PC] = Assembly(parameter, mem, PC)
+
     # print(mem[PC])
     #  print(parameter)
     # print(PC)
-    if(parameter[1] == ".fill"):
 
+    if(parameter[1] == ".fill"):
         print("memory[" + (str(PC)) + "]=" + str(int(mem[PC])))
+
     else:
         print("memory[" + (str(PC)) + "]=" + str(int(mem[PC], 2)))
 
     PC += 1
+
+PC = 0
+simulator(mem, reg, PC)
