@@ -18,17 +18,14 @@ def simulator(mem, reg, PC):
         reg[i] = 0
 
     while PC < len(mem):
-        print(PC)
-        print(reg)
-
         opcode = str(mem[PC])[:3]
         if(opcode == "000" or opcode == "001"):  # R type
             dest = int(str(mem[PC])[-3:], 2)
             A = int(str(mem[PC])[4:6], 2)
             B = int(str(mem[PC])[7:9], 2)
-            if(opcode == "000"):
+            if(opcode == "000"):  # add
                 reg[dest] = int(reg[A]) + int(reg[B])
-            elif(opcode == "001"):
+            elif(opcode == "001"):  # nand
                 print("nand")
         elif(opcode == "010" or opcode == "011" or opcode == "100"):  # I type
             A = int(str(mem[PC])[4:6], 2)
@@ -39,12 +36,6 @@ def simulator(mem, reg, PC):
             elif(opcode == "011"):
                 mem[int(reg[A]) + offset] = reg[B]  # sw
             elif(opcode == "100"):  # beq
-                # print(mem[PC])
-                # print(reg[A])
-                # print(reg[B])
-                # print(offset)
-                # print("aaaaa")
-                # print("beq")
                 if reg[A] == reg[B]:
                     PC = PC + offset
         elif(opcode == "101"):  # J type

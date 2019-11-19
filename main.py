@@ -29,7 +29,6 @@ while PC < len(line_arr):
     # print(mem[PC])
     #  print(parameter)
     # print(PC)
-
     if(parameter[1] == ".fill"):
         print("memory[" + (str(PC)) + "]=" + str(int(mem[PC])))
 
