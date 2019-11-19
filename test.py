@@ -1,24 +1,23 @@
-# ‭0001000000010000000000000010‬
-# 0001000000010000000000000110
-
-
-def twocompliment_16bit(num):
-    if num < 0:
-        if num >= -32768:
-            negative_num = -1 * num
-            print(negative_num)
-            compliment = (bin((32767 - negative_num + 1)))[2:].zfill(15)
-            print(compliment)
-            two_compliment = '1'+compliment
-            return two_compliment
-        else:
-            raise ValueError("underflow")
+"10101010101010101010101010101010"
+"00000000000000000000000000000000"
+a = "10101010101010101010101010101010"
+ass = list(a)
+rd = [ass[0],ass[1],ass[2]]
+rs = [ass[19],ass[20],ass[21]]
+rt = [ass[16],ass[17],ass[18]]
+print(rs)
+print(rt)
+print
+i = 0
+while i < len(rd):
+    if rs[i] == "0" or rt[i] == "0":
+        rd[i] = "1"
     else:
-        two_compliment = bin(num)[2:].zfill(16)
-        if num < 32768:
-            return two_compliment
-        else:
-            raise ValueError("overflow")
-
-
-print(twocompliment_16bit(-3))
+        rd[i] = "0"
+    i = i+1
+i = 0
+ans = ""
+while i < len(rd):
+    ans = ans+rd[i]
+    i = i+1
+print(ans)
