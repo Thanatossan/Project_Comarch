@@ -64,7 +64,7 @@ def simulator(mem, reg, PC, mem_Int):
         elif(opcode == "010" or opcode == "011" or opcode == "100"):  # I type
             A = int(str(mem[PC])[3+bit:6+bit], 2)
             B = int(str(mem[PC])[6+bit:9+bit], 2)
-            offset = int(twocompliment_to_int((mem[PC])[-15:]))
+            offset = int(twocompliment_to_int(bit16_to_bit32((mem[PC])[-16:])))
             if(opcode == "010"):
                 reg[B] = mem[int(reg[A]) + offset]  # lw
             elif(opcode == "011"):
@@ -84,7 +84,7 @@ def simulator(mem, reg, PC, mem_Int):
             pass
         elif(opcode == "110"):  # halt
             break
-        print(PC)
+
         PC = PC + 1
 
     print("machine halted")
