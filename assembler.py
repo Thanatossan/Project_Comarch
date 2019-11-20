@@ -5,11 +5,11 @@ fill_arr = []
 Mech = ''
 
 
-def storelabel():
+def storelabel(filename):
 
     label_addr = {}  # storeLabel as dictionary
     temp = 0
-    with open('test.txt', 'r') as f2:
+    with open(filename, 'r') as f2:
 
         for line in f2:
             key = re.split(r"\s+", line, 5)
@@ -59,7 +59,7 @@ def twocompliment_32bit(num):
             raise ValueError("overflow")
 
 
-def Assembly(parameter, mem, PC):
+def Assembly(parameter, mem, PC, filename):
 
     # R type
     if parameter[1] == "add" or parameter[1] == "nand":
@@ -90,7 +90,7 @@ def Assembly(parameter, mem, PC):
             opcode = "100"
 
         if not (parameter[4].lstrip('-').isdigit()):
-            addr_label = storelabel()[offset]
+            addr_label = storelabel(filename)[offset]
             bin_addr_label = bin((addr_label))[2:].zfill(16)
             if(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (
@@ -142,7 +142,9 @@ def Assembly(parameter, mem, PC):
     elif parameter[1] == ".fill":
         fill_addr = parameter[2]
         if not(fill_addr.lstrip('-').isdigit()):
-            addr_label = storelabel()[fill_addr]
+            addr_label = storelabel(filename)[fill_addr]
             return addr_label
         else:
             return fill_addr
+    else:
+        raise ValueError("Invalid Error")

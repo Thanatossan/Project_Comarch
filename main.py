@@ -2,7 +2,8 @@ import re  # RegEx
 from assembler import Assembly
 from simulator import simulator
 line_arr = []
-with open('test.txt', 'r') as f:
+filename = "factorial.txt"
+with open(filename, 'r') as f:
     for line in f:
         line_arr.append(line)
 
@@ -29,7 +30,7 @@ while PC < len(line_arr):
     # print(parameter)
     # check_offset(parameter, PC)
     # # checkoffset(parameter, PC)
-    mem[PC] = Assembly(parameter, mem, PC)
+    mem[PC] = Assembly(parameter, mem, PC, filename)
 
     # print(mem[PC])
     #  print(parameter)
