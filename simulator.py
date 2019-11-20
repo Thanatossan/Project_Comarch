@@ -1,5 +1,6 @@
 import re
 from assembler import twocompliment_16bit
+from simulator_form import simulator_form
 
 
 def twocompliment_to_int(twocomp):
@@ -13,11 +14,13 @@ def twocompliment_to_int(twocomp):
         return twocomp
 
 
-def simulator(mem, reg, PC):
+def simulator(mem, reg, PC, mem_Int):
+    count_instru = 0
     for i in range(0, 8):  # initail register
         reg[i] = 0
-
     while PC < len(mem):
+        simulator_form(PC, reg, mem, mem_Int)
+        count_instru = count_instru + 1
         opcode = str(mem[PC])[:3]
         if(opcode == "000" or opcode == "001"):  # R type
             dest = int(str(mem[PC])[-3:], 2)
@@ -49,7 +52,10 @@ def simulator(mem, reg, PC):
         elif(opcode == "111"):  # noop
             print("noop")
         elif(opcode == "110"):  # halt
-            print("halt")
             break
-
         PC = PC + 1
+
+    print("machine halted")
+    print("total of " + str(count_instru) + " instructions executed")
+    print("final state of machine:")
+    simulator_form(PC, reg, mem, mem_Int)

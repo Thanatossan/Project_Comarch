@@ -11,6 +11,11 @@ for i in range(0, len(line_arr)):
     mem.append(0)
     # print(mem)
 
+mem_int = []
+for i in range(0, len(line_arr)):
+    mem_int.append(0)
+    # print(mem)
+
 
 reg = []
 for i in range(0, 8):
@@ -31,11 +36,13 @@ while PC < len(line_arr):
     # print(PC)
     if(parameter[1] == ".fill"):
         print("memory[" + (str(PC)) + "]=" + str(int(mem[PC])))
+        mem_int[PC] = int(mem[PC])
 
     else:
         print("memory[" + (str(PC)) + "]=" + str(int(mem[PC], 2)))
+        mem_int[PC] = int(mem[PC], 2)
 
     PC += 1
 
 PC = 0
-simulator(mem, reg, PC)
+simulator(mem, reg, PC, mem_int)
