@@ -1,20 +1,20 @@
-	lw	0	1	mcand	
-	lw	0	2	mplier
-	lw	0	4	pos1
-	lw	0	5	pos1
-	lw	0	6	zero
-	lw	0	7	pos15
-start	nand	2	4	3
-	nand	3	3	3
-	beq	0	3	4
-	add	1	6	6
-	add	1	1	1
-	beq	5	7	6
-	add	4	4	4
-	lw	0	7	pos1
-	add	5	7	5
-	lw	0	7	pos15
-	beq	0	0	start
+	lw	0	1	mcand	set reg1 = 32766
+	lw	0	2	mplier	set reg2 = 10383
+	lw	0	4	pos1	set reg4 = 1
+	lw	0	5	pos1	set reg5 = 1
+	lw	0	6	zero	set reg6 = 0
+	lw	0	7	pos15	set reg7 = 15
+start	nand	2	4	3	check mplier with reg4
+	nand	3	3	3	check bit of mplier
+	beq	0	3	3	go to check bit if bit checked(reg3) == 0  
+	add	1	6	6	add reg1 + reg6 to reg6
+	beq	5	7	6	go to end of program when reg5 == reg7
+	add	1	1	1	add reg1 + reg1 to reg1
+	add	4	4	4	check bit
+	lw	0	7	pos1	load pos1 to reg7
+	add	5	7	5	add reg5 + reg 7 to reg5 (i++)
+	lw	0	7	pos15	load pos15 back to reg7
+	beq	0	0	start	go back to the beginning of the loop 
 	noop
 done	halt
 mcand	.fill	32766
