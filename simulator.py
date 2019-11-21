@@ -19,7 +19,7 @@ def bit16_to_bit32(bit16):
         for n in range(0, 16):
             bit16 = "1" + bit16
     else:
-        for n in range(0, 16):
+        for m in range(0, 16):
             bit16 = "0" + bit16
 
     bit32 = bit16
@@ -40,7 +40,6 @@ def simulator(mem, reg, PC, mem_Int):
         elif(len(str(mem[PC])) == 25):
             bit = 0
         opcode = str(mem[PC])[bit:3+bit]
-        print(bit)
         if(opcode == "000" or opcode == "001"):  # R type
             dest = int(str(mem[PC])[-3:], 2)
             A = int(str(mem[PC])[3+bit:6+bit], 2)
@@ -68,6 +67,7 @@ def simulator(mem, reg, PC, mem_Int):
             if(opcode == "010"):
                 reg[B] = mem[int(reg[A]) + offset]  # lw
             elif(opcode == "011"):
+
                 mem[int(reg[A]) + offset] = reg[B]  # sw
             elif(opcode == "100"):  # beq
                 if reg[A] == reg[B]:
@@ -79,12 +79,11 @@ def simulator(mem, reg, PC, mem_Int):
                 reg[B] = PC + 1
             else:
                 reg[B] = PC + 1
-                PC = int(reg[A]) + 1
+                PC = int(reg[A]) - 1
         elif(opcode == "111"):  # noop
             pass
         elif(opcode == "110"):  # halt
             break
-
         PC = PC + 1
 
     print("machine halted")
