@@ -6,11 +6,9 @@ Mech = ''
 
 
 def storelabel(filename):
-
     label_addr = {}  # storeLabel as dictionary
     temp = 0
     with open(filename, 'r') as f2:
-
         for line in f2:
             key = re.split(r"\s+", line, 5)
             if key[0] != '':
@@ -19,9 +17,36 @@ def storelabel(filename):
                 else:
                     raise ValueError('label duplicated : ' + key[0])
             temp += 1
-    # print(label_addr)
+    print(label_addr)
     # print('five' in label_addr)  # check statement
 
+    return label_addr
+
+def labelcheck(filename):
+    with open(filename, 'r') as f2:
+        for line1 in f2:
+            check = False
+            label = re.split(r"\s+", line1, 5)
+            for line2 in f2:
+                check = False
+                instruc = re.split(r"\s+", line2, 5)
+                if label[4] == instruc[0]:
+                        if instruc[1] == 'halt' or instruc[1] == 'noop':
+                            check = True
+                            break
+                        elif instruc[1] != '':
+                            if instruc[2] != '':
+                                check = True
+                                break
+                            else:
+                                continue
+                        else:
+                            continue
+                else:
+                    continue
+            
+        if check == False:
+            raise ValueError('label undifine : ')
     return label_addr
 
 
@@ -91,6 +116,8 @@ def Assembly(parameter, mem, PC, filename):
 
         if not (parameter[4].lstrip('-').isdigit()):
             addr_label = storelabel(filename)[offset]
+            if addr_label > 65535:
+                raise ValueError('offsetField overflow 16 bits') #offsetField overflow check
             bin_addr_label = bin((addr_label))[2:].zfill(16)
             if(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (

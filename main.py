@@ -2,7 +2,7 @@ import re  # RegEx
 from assembler import Assembly
 from simulator import simulator
 line_arr = []
-filename = "test2.txt"
+filename = "test.txt"
 with open(filename, 'r') as f:
     for line in f:
         line_arr.append(line)
@@ -45,5 +45,5 @@ while PC < len(line_arr):
 
     PC += 1
 
-PC = 0
-simulator(mem, reg, PC, mem_int)
+# PC = 0
+# simulator(mem, reg, PC, mem_int)
