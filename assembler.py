@@ -19,8 +19,6 @@ def storelabel(filename):
                 else:
                     raise ValueError('label duplicated : ' + key[0])
             temp += 1
-    # print(label_addr)
-    # print('five' in label_addr)  # check statement
 
     return label_addr
 
@@ -98,9 +96,10 @@ def Assembly(parameter, mem, PC, filename):
                     bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
                 return Mech
             elif(parameter[1] == "beq"):
-                if(addr_label < PC):
+                if(addr_label-1 < PC):
                     # in case of addr_label is above current
                     addr_label = (addr_label * (-1)) - 1
+                    print(addr_label)
                 Mech = (
                     opcode + bin(int(parameter[2]))[2:].zfill(3) +
                     bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label))

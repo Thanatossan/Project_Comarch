@@ -1,24 +1,20 @@
-	lw	0	1	mcand	
+	lw	0	7	mcand
 	lw	0	2	mplier
-	lw	0	4	pos1
+	lw	0	3	pos1
+	lw	0	4	pos15
 	lw	0	5	pos1
-	lw	0	6	zero
-	lw	0	7	pos15
-start	nand	2	4	3
-	nand	3	3	3
-	beq	0	3	4
-	add	1	6	6
-	add	1	1	1
-	beq	5	7	6
-	add	4	4	4
-	lw	0	7	pos1
-	add	5	7	5
-	lw	0	7	pos15
+start	beq	5	4	done
+	nand	2	5	3
+	nand	3	3	6
+	beq	0	6	sub
+	add	1	7	1
+sub	add	7	7	7
+	add	5	5	5
 	beq	0	0	start
-	noop
 done	halt
 mcand	.fill	32766
-mplier	.fill	10383	
+mplier	.fill	10383
 pos1	.fill	1
-zero	.fill	0
-pos15	.fill	15
+pos15	.fill	32768	
+begin	.fill	start
+add	.fill	sub
