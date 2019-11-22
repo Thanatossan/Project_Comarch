@@ -1,5 +1,5 @@
 import re
-from assembler import twocompliment_16bit
+from assembler import twocompliment_16bit, twocompliment_32bit
 from simulator_form import simulator_form
 
 
@@ -17,7 +17,6 @@ def twocompliment_to_int(twocomp):
         if(twocomp[:7] == "1111111"):  # check first bit
             twocomp = twocomp[-15:]  # if first 7 bit is 1 delete first 7 bit
             # fill firstbit with 0
-            print(twocomp)
             twocomp = -1*(32767 - (int(twocomp.zfill(16), 2)) + 1)
             return twocomp  # twocomp = 32767 - negativeNumber +1
         else:
@@ -58,27 +57,16 @@ def simulator(mem, reg, PC, mem_Int):
             if(opcode == "000"):  # add
                 reg[dest] = int(reg[A]) + int(reg[B])
             elif(opcode == "001"):  # nand
-                x = bin(int(reg[A]))[2:]
-                y = bin(int(reg[B]))[2:]
-                if(len(x)) >= (len(y)):
-                    y = y.zfill(len(x))
-                else:
-                    x = x.zfill(len(y))
-                for i in range(0, len(y)):
-                    nand_bit = ""
-                    if(x[i:i+1] == "1" and y[i:i+1] == "1"):
-                        nand_bit = nand_bit + "0"
-                    else:
-                        nand_bit = nand_bit + "1"
-                reg[dest] = nand_bit
+                x = twocompliment_to_int(
+                    twocompliment_32bit(int(reg[A])))
+                y = twocompliment_to_int(
+                    twocompliment_32bit(int(reg[B])))
+                xnandy = twocompliment_32bit(~(x & y))
+                reg[dest] = twocompliment_to_int(xnandy)
         elif(opcode == "010" or opcode == "011" or opcode == "100"):  # I type
             A = int(str(mem[PC])[3+bit:6+bit], 2)
             B = int(str(mem[PC])[6+bit:9+bit], 2)
             offset = int(twocompliment_to_int(bit16_to_bit32((mem[PC])[-16:])))
-            while int(reg[A]) + offset > len(mem) - 1:
-                mem.append("0")
-                if not(len(mem) == len(mem_Int)):
-                    mem_Int.append("0")
             if(opcode == "010"):  # lw
                 reg[B] = mem[int(reg[A]) + offset]
             elif(opcode == "011"):     # sw
@@ -105,8 +93,7 @@ def simulator(mem, reg, PC, mem_Int):
             break
 
         PC = PC + 1
-        # if(count_instru == 40):
-        #     raise ValueError("kuy")
+
     print("machine halted")
     print("total of " + str(count_instru) + " instructions executed")
     print("final state of machine:")

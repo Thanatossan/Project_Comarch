@@ -19,7 +19,6 @@ def storelabel(filename):
                 else:
                     raise ValueError('label duplicated : ' + key[0])
             temp += 1
-
     return label_addr
 
 
@@ -42,16 +41,16 @@ def twocompliment_16bit(num):
 
 def twocompliment_32bit(num):
     if num < 0:
-        if num >= -32768:
+        if num >= -2147483648:
             negative_num = -1 * num
-            compliment = (bin((32767 - negative_num + 1)))[2:].zfill(31)
+            compliment = (bin((2147483647 - negative_num + 1)))[2:].zfill(31)
             two_compliment = '1'+compliment
             return two_compliment
         else:
             raise ValueError("underflow")
     else:
         two_compliment = bin(num)[2:].zfill(32)
-        if num < 32768:
+        if num < 2147483648:
             return two_compliment
         else:
             raise ValueError("overflow")
@@ -89,8 +88,6 @@ def Assembly(parameter, mem, PC, filename):
 
         if not (parameter[4].lstrip('-').isdigit()):
             addr_label = storelabel(filename)[offset]
-            print(storelabel(filename))
-            print(addr_label)
             bin_addr_label = bin((addr_label))[2:].zfill(16)
             if(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (
@@ -98,16 +95,16 @@ def Assembly(parameter, mem, PC, filename):
                     bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
                 return Mech
             elif(parameter[1] == "beq"):
-                if(addr_label-1 < PC):
-                    # in case of addr_label is above current
-                    addr_above = (addr_label * (-1)) - 1
-                    Mech = (
-                        opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                        bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
-                else:
-                    Mech = (
-                        opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                        bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
+                # if(addr_label-1 < PC):
+                #     # in case of addr_label is above current
+                #     addr_above = (addr_label) - PC - 1
+                #     Mech = (
+                #         opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                #         bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
+                # else:
+                Mech = (
+                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
 
                 return Mech
         elif(parameter[4].isdigit()):
@@ -148,8 +145,10 @@ def Assembly(parameter, mem, PC, filename):
         fill_addr = parameter[2]
         if not(fill_addr.lstrip('-').isdigit()):
             addr_label = storelabel(filename)[fill_addr]
+            print(addr_label)
             return addr_label
         else:
+            print(fill_addr)
             return fill_addr
     else:
         raise ValueError("Invalid Error")
