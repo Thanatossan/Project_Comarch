@@ -89,6 +89,8 @@ def Assembly(parameter, mem, PC, filename):
 
         if not (parameter[4].lstrip('-').isdigit()):
             addr_label = storelabel(filename)[offset]
+            print(storelabel(filename))
+            print(addr_label)
             bin_addr_label = bin((addr_label))[2:].zfill(16)
             if(parameter[1] == "lw" or parameter[1] == "sw"):
                 Mech = (
@@ -98,11 +100,15 @@ def Assembly(parameter, mem, PC, filename):
             elif(parameter[1] == "beq"):
                 if(addr_label-1 < PC):
                     # in case of addr_label is above current
-                    addr_label = (addr_label * (-1)) - 1
-                    print(addr_label)
-                Mech = (
-                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label))
+                    addr_above = (addr_label * (-1)) - 1
+                    Mech = (
+                        opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                        bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
+                else:
+                    Mech = (
+                        opcode + bin(int(parameter[2]))[2:].zfill(3) +
+                        bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
+
                 return Mech
         elif(parameter[4].isdigit()):
 

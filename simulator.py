@@ -8,16 +8,17 @@ def twocompliment_to_int(twocomp):
         if(twocomp[:1] == "1"):  # check first bit
             twocomp = twocomp[-15:]  # if first bit is 1 delete first bit
             # fill firstbit with 0
-            twocomp = -1*(32768 - (int(twocomp.zfill(16), 2)))
+            twocomp = -1*(32767 - (int(twocomp.zfill(16), 2)) + 1)
             return twocomp  # twocomp = 32767 - negativeNumber +1
         else:
             twocomp = int(twocomp, 2)
             return twocomp
     elif(len(twocomp) == 32):
-        if(twocomp[:1] == "1"):  # check first bit
-            twocomp = twocomp[-31:]  # if first bit is 1 delete first bit
+        if(twocomp[:7] == "1111111"):  # check first bit
+            twocomp = twocomp[-15:]  # if first 7 bit is 1 delete first 7 bit
             # fill firstbit with 0
-            twocomp = -1*(4294967296 - (int(twocomp.zfill(32), 2)))
+            print(twocomp)
+            twocomp = -1*(32767 - (int(twocomp.zfill(16), 2)) + 1)
             return twocomp  # twocomp = 32767 - negativeNumber +1
         else:
             twocomp = int(twocomp, 2)
@@ -41,7 +42,7 @@ def simulator(mem, reg, PC, mem_Int):
     for i in range(0, 8):  # initail register
         reg[i] = 0
     while PC < len(mem):
-
+        reg[0] = 0
         simulator_form(PC, reg, mem, mem_Int)
         count_instru = count_instru + 1
         bit = 0
@@ -79,16 +80,16 @@ def simulator(mem, reg, PC, mem_Int):
                 if not(len(mem) == len(mem_Int)):
                     mem_Int.append("0")
             if(opcode == "010"):  # lw
-                while int(reg[A]) + offset > len(mem) - 1:
-                    mem.append("0")
-                    if not(len(mem) > len(mem_Int)):
-                        mem_Int.append("0")
                 reg[B] = mem[int(reg[A]) + offset]
             elif(opcode == "011"):     # sw
+                while int(reg[A]) + offset > len(mem) - 1:
+                    mem.append("0")
+                    if (len(mem) > len(mem_Int)):
+                        mem_Int.append("0")
                 mem[int(reg[A]) + offset] = (reg[B])
                 mem_Int[int(reg[A]) + offset] = (reg[B])
             elif(opcode == "100"):  # beq
-                if reg[A] == reg[B]:
+                if int(reg[A]) == int(reg[B]):
                     PC = PC + offset
         elif(opcode == "101"):  # J type
             A = int(str(mem[PC])[3+bit:6+bit], 2)
@@ -104,8 +105,8 @@ def simulator(mem, reg, PC, mem_Int):
             break
 
         PC = PC + 1
-        if(len(mem) == 45):
-            raise ValueError("kuy")
+        # if(count_instru == 40):
+        #     raise ValueError("kuy")
     print("machine halted")
     print("total of " + str(count_instru) + " instructions executed")
     print("final state of machine:")
