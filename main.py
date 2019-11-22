@@ -2,7 +2,7 @@ import re  # RegEx
 from assembler import Assembly
 from simulator import simulator
 line_arr = []
-filename = "combination.txt"
+filename = "testcase/combination.txt"
 with open(filename, 'r') as f:
     for line in f:
         line_arr.append(line)
