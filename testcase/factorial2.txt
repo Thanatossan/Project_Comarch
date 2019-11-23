@@ -1,0 +1,35 @@
+	lw	0	1	input
+	lw	0	6	pos1
+	beq	0	1	return1
+	beq	6	1	return1
+main	beq	1	2	halt
+	lw	0	6	pos1
+	add	6	2	2
+	add	0	0	7
+	add	6	6	5
+	beq	6	2	first
+	beq	5	2	first
+	beq	2	2	multi
+first	beq	2	7	main
+	add	3	4	3
+	lw	0	6	mul
+	jalr	6	0
+multi	add	0	2	4
+	lw	0	6	neg
+	add	4	6	4
+	beq	4	7	main
+	add	0	3	5
+	add	3	5	3
+	lw	0	6	pos1
+	add	7	6	7
+	lw	0	6	mul
+	jalr	6	0
+return1	lw	0	3	pos1
+halt	halt
+mul	.fill	multi
+input	.fill	4
+pos1	.fill	1
+neg	.fill	-1
+m	.fill	main
+h	.fill	halt
+re	.fill	return1

@@ -1,5 +1,5 @@
 def simulator_form(PC, reg, mem, mem_int):
-    print('@@@')
+    print('\n@@@')
     print('state:')
     print('\tpc ', PC)
     print('\tmemory:')

@@ -2,7 +2,6 @@ import re
 from assembler import twocompliment_16bit, twocompliment_32bit
 from simulator_form import simulator_form
 
-
 def twocompliment_to_int(twocomp):
     if(len(twocomp) == 16):
         if(twocomp[:1] == "1"):  # check first bit
@@ -23,7 +22,6 @@ def twocompliment_to_int(twocomp):
             twocomp = int(twocomp, 2)
             return twocomp
 
-
 def bit16_to_bit32(bit16):
     if int(bit16, 2) & (1 << 15):
         for n in range(0, 16):
@@ -34,7 +32,6 @@ def bit16_to_bit32(bit16):
 
     bit32 = bit16
     return bit32
-
 
 def simulator(mem, reg, PC, mem_Int):
     count_instru = 0

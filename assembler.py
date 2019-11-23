@@ -1,16 +1,13 @@
-
 import re
 check_arr = []
 fill_arr = []
 Mech = ''
-
 
 def storelabel(filename):
 
     label_addr = {}  # storeLabel as dictionary
     temp = 0
     with open(filename, 'r') as f2:
-
         for line in f2:
             key = re.split(r"\s+", line, 5)
             if key[0] != '':
@@ -22,7 +19,7 @@ def storelabel(filename):
     return label_addr
 
 
-def twocompliment_16bit(num):
+def twocompliment_16bit(num): 
     if num < 0:
         if num >= -32768:
             negative_num = -1 * num
@@ -56,99 +53,99 @@ def twocompliment_32bit(num):
             raise ValueError("overflow")
 
 
-def Assembly(parameter, mem, PC, filename):
+def Assembly(field, PC, filename):
 
     # R type
-    if parameter[1] == "add" or parameter[1] == "nand":
-        instru = parameter[1]
-        regA = parameter[2]
-        regB = parameter[3]
-        offset = parameter[4]
+    if field[1] == "add" or field[1] == "nand":
+        instru = field[1]
+        regA = field[2]
+        regB = field[3]
+        offset = field[4]
         opcode = ''
-        if(parameter[1] == "add"):
+        if(field[1] == "add"):
             opcode = "000"
-        elif(parameter[1] == "nand"):
+        elif(field[1] == "nand"):
             opcode = "001"
-        Mech = (opcode+bin(int(parameter[2]))[2:].zfill(3) +
-                bin(int(parameter[3]))[2:].zfill(3) + "0000000000000"+bin(int(parameter[4]))[2:].zfill(3))
+        Mech = (opcode+bin(int(field[2]))[2:].zfill(3) +
+                bin(int(field[3]))[2:].zfill(3) + "0000000000000"+bin(int(field[4]))[2:].zfill(3))
 
         return Mech
     # I type
-    elif parameter[1] == "lw" or parameter[1] == "sw" or parameter[1] == "beq":
-        instru = parameter[1]
-        regA = parameter[2]
-        regB = parameter[3]
-        offset = parameter[4]
-        if(parameter[1] == "lw"):
+    elif field[1] == "lw" or field[1] == "sw" or field[1] == "beq":
+        instru = field[1]
+        regA = field[2]
+        regB = field[3]
+        offset = field[4]
+        if(field[1] == "lw"):
             opcode = "010"
-        elif(parameter[1] == "sw"):
+        elif(field[1] == "sw"):
             opcode = "011"
-        elif(parameter[1] == "beq"):
+        elif(field[1] == "beq"):
             opcode = "100"
 
-        if not (parameter[4].lstrip('-').isdigit()):
+        if not (field[4].lstrip('-').isdigit()):
             addr_label = storelabel(filename)[offset]
             bin_addr_label = bin((addr_label))[2:].zfill(16)
-            if(parameter[1] == "lw" or parameter[1] == "sw"):
+            if(field[1] == "lw" or field[1] == "sw"):
                 Mech = (
-                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+bin_addr_label)
+                    opcode + bin(int(field[2]))[2:].zfill(3) +
+                    bin(int(field[3]))[2:].zfill(3)+bin_addr_label)
                 return Mech
-            elif(parameter[1] == "beq"):
+            elif(field[1] == "beq"):
                 # if(addr_label-1 < PC):
                 #     # in case of addr_label is above current
                 #     addr_above = (addr_label) - PC - 1
                 #     Mech = (
-                #         opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                #         bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
+                #         opcode + bin(int(field[2]))[2:].zfill(3) +
+                #         bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
                 # else:
                 Mech = (
-                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
+                    opcode + bin(int(field[2]))[2:].zfill(3) +
+                    bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
 
                 return Mech
-        elif(parameter[4].isdigit()):
+        elif(field[4].isdigit()):
 
-            if(parameter[1] == "beq"):
+            if(field[1] == "beq"):
                 Mech = (
-                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(int(parameter[4])))
+                    opcode + bin(int(field[2]))[2:].zfill(3) +
+                    bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(int(field[4])))
                 return Mech
-            elif(parameter[1] == "lw" or parameter[1] == "sw"):
+            elif(field[1] == "lw" or field[1] == "sw"):
                 Mech = (
-                    opcode + bin(int(parameter[2]))[2:].zfill(3) +
-                    bin(int(parameter[3]))[2:].zfill(3)+twocompliment_16bit(int(parameter[4])))
+                    opcode + bin(int(field[2]))[2:].zfill(3) +
+                    bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(int(field[4])))
                 return Mech
 
     # J type
-    elif parameter[1] == "jalr":
-        instru = parameter[1]
-        regA = parameter[2]
-        regB = parameter[3]
+    elif field[1] == "jalr":
+        instru = field[1]
+        regA = field[2]
+        regB = field[3]
         opcode = "101"
 
-        Mech = (opcode+bin(int(parameter[2]))[2:].zfill(3) +
-                bin(int(parameter[3]))[2:].zfill(3) + "0000000000000000")
+        Mech = (opcode+bin(int(field[2]))[2:].zfill(3) +
+                bin(int(field[3]))[2:].zfill(3) + "0000000000000000")
         return Mech
 
     # O type
-    elif parameter[1] == "halt" or parameter[1] == "noop":
-        if(parameter[1] == "halt"):
+    elif field[1] == "halt" or field[1] == "noop":
+        if(field[1] == "halt"):
             opcode = "110"
-        elif(parameter[1] == "noop"):
+        elif(field[1] == "noop"):
             opcode = "111"
 
         Mech = (opcode + "0000000000000000000000")
         return Mech
 
-    elif parameter[1] == ".fill":
-        fill_addr = parameter[2]
+    elif field[1] == ".fill":
+        fill_addr = field[2]
         if not(fill_addr.lstrip('-').isdigit()):
             addr_label = storelabel(filename)[fill_addr]
-            print(addr_label)
+            #print(addr_label)
             return addr_label
         else:
-            print(fill_addr)
+            #print(fill_addr)
             return fill_addr
     else:
         raise ValueError("Invalid Error")
