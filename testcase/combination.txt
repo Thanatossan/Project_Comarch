@@ -31,8 +31,8 @@ done    lw  0   4   pos1
     add 3   4   3
     jalr    7   0
 func    .fill   combi
-n   .fill   7
-r   .fill   3
+n   .fill   8
+r   .fill   2
 pos1    .fill   1
 neg1    .fill   -1
 stack   .fill   0

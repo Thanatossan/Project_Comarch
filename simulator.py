@@ -2,6 +2,9 @@ import re
 from assembler import twocompliment_16bit, twocompliment_32bit
 from simulator_form import simulator_form
 
+# ----------- Convert both 16 bit and 32 bit from twocomplimentbti to int ------
+
+
 def twocompliment_to_int(twocomp):
     if(len(twocomp) == 16):
         if(twocomp[:1] == "1"):  # check first bit
@@ -21,6 +24,8 @@ def twocompliment_to_int(twocomp):
         else:
             twocomp = int(twocomp, 2)
             return twocomp
+# --------- Convert 16 bit to 32 bit --------
+
 
 def bit16_to_bit32(bit16):
     if int(bit16, 2) & (1 << 15):
@@ -33,13 +38,16 @@ def bit16_to_bit32(bit16):
     bit32 = bit16
     return bit32
 
+
+# ----------- simulator ---------------------
 def simulator(mem, reg, PC, mem_Int):
     count_instru = 0
     for i in range(0, 8):  # initail register
         reg[i] = 0
     while PC < len(mem):
         reg[0] = 0
-        simulator_form(PC, reg, mem, mem_Int)
+
+        simulator_form(PC, reg, mem, mem_Int)  # print each state
         count_instru = count_instru + 1
         bit = 0
         if(len(str(mem[PC])) == 32):
@@ -51,9 +59,9 @@ def simulator(mem, reg, PC, mem_Int):
             dest = int(str(mem[PC])[-3:], 2)
             A = int(str(mem[PC])[3+bit:6+bit], 2)
             B = int(str(mem[PC])[6+bit:9+bit], 2)
-            if(opcode == "000"):  # add
+            if(opcode == "000"):  # add intruction
                 reg[dest] = int(reg[A]) + int(reg[B])
-            elif(opcode == "001"):  # nand
+            elif(opcode == "001"):  # nand intruction
                 x = twocompliment_to_int(
                     twocompliment_32bit(int(reg[A])))
                 y = twocompliment_to_int(
@@ -64,19 +72,19 @@ def simulator(mem, reg, PC, mem_Int):
             A = int(str(mem[PC])[3+bit:6+bit], 2)
             B = int(str(mem[PC])[6+bit:9+bit], 2)
             offset = int(twocompliment_to_int(bit16_to_bit32((mem[PC])[-16:])))
-            if(opcode == "010"):  # lw
+            if(opcode == "010"):  # lw intruction
                 reg[B] = mem[int(reg[A]) + offset]
-            elif(opcode == "011"):     # sw
+            elif(opcode == "011"):     # sw intruction
                 while int(reg[A]) + offset > len(mem) - 1:
                     mem.append("0")
                     if (len(mem) > len(mem_Int)):
                         mem_Int.append("0")
                 mem[int(reg[A]) + offset] = (reg[B])
                 mem_Int[int(reg[A]) + offset] = (reg[B])
-            elif(opcode == "100"):  # beq
+            elif(opcode == "100"):  # beq intruction
                 if int(reg[A]) == int(reg[B]):
                     PC = PC + offset
-        elif(opcode == "101"):  # J type
+        elif(opcode == "101"):  # J type # jalr intruction
             A = int(str(mem[PC])[3+bit:6+bit], 2)
             B = int(str(mem[PC])[6+bit:9+bit], 2)
             if A == B:
@@ -84,13 +92,13 @@ def simulator(mem, reg, PC, mem_Int):
             else:
                 reg[B] = PC + 1
                 PC = int(reg[A]) - 1
-        elif(opcode == "111"):  # noop
+        elif(opcode == "111"):  # noop intruction
             pass
-        elif(opcode == "110"):  # halt
+        elif(opcode == "110"):  # halt intruction
             break
 
         PC = PC + 1
-
+# -------------print final state ------------------------
     print("machine halted")
     print("total of " + str(count_instru) + " instructions executed")
     print("final state of machine:")

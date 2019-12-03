@@ -3,6 +3,9 @@ check_arr = []
 fill_arr = []
 Mech = ''
 
+# ---------------Store label for keep the label address -----------
+
+
 def storelabel(filename):
 
     label_addr = {}  # storeLabel as dictionary
@@ -14,12 +17,15 @@ def storelabel(filename):
                 if key[0] not in label_addr:
                     label_addr[key[0]] = temp
                 else:
+                    print("exit(1)")
                     raise ValueError('label duplicated : ' + key[0])
             temp += 1
     return label_addr
 
+# ------------- Convert int to Twocompliment 16 bit -------------
 
-def twocompliment_16bit(num): 
+
+def twocompliment_16bit(num):
     if num < 0:
         if num >= -32768:
             negative_num = -1 * num
@@ -27,15 +33,18 @@ def twocompliment_16bit(num):
             two_compliment = '1'+compliment
             return two_compliment
         else:
+            print("exit(1)")
             raise ValueError("underflow")
     else:
         two_compliment = bin(num)[2:].zfill(16)
         if num < 32768:
             return two_compliment
         else:
+            print("exit(1)")
             raise ValueError("overflow")
 
 
+# ------------- Convert int to Twocompliment 32 bit -------------
 def twocompliment_32bit(num):
     if num < 0:
         if num >= -2147483648:
@@ -44,13 +53,17 @@ def twocompliment_32bit(num):
             two_compliment = '1'+compliment
             return two_compliment
         else:
+            print("exit(1)")
             raise ValueError("underflow")
     else:
         two_compliment = bin(num)[2:].zfill(32)
         if num < 2147483648:
             return two_compliment
         else:
+            print("exit(1)")
             raise ValueError("overflow")
+
+# ---------------- assembly ------------------
 
 
 def Assembly(field, PC, filename):
@@ -92,13 +105,6 @@ def Assembly(field, PC, filename):
                     bin(int(field[3]))[2:].zfill(3)+bin_addr_label)
                 return Mech
             elif(field[1] == "beq"):
-                # if(addr_label-1 < PC):
-                #     # in case of addr_label is above current
-                #     addr_above = (addr_label) - PC - 1
-                #     Mech = (
-                #         opcode + bin(int(field[2]))[2:].zfill(3) +
-                #         bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(addr_above))
-                # else:
                 Mech = (
                     opcode + bin(int(field[2]))[2:].zfill(3) +
                     bin(int(field[3]))[2:].zfill(3)+twocompliment_16bit(addr_label-PC-1))
@@ -137,15 +143,14 @@ def Assembly(field, PC, filename):
 
         Mech = (opcode + "0000000000000000000000")
         return Mech
-
+    # .fill
     elif field[1] == ".fill":
         fill_addr = field[2]
         if not(fill_addr.lstrip('-').isdigit()):
             addr_label = storelabel(filename)[fill_addr]
-            #print(addr_label)
             return addr_label
         else:
-            #print(fill_addr)
             return fill_addr
     else:
         raise ValueError("Invalid Error")
+        print("exit(1)")

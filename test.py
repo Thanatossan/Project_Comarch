@@ -1,13 +1,11 @@
-  x = bin(int(reg[A]))[2:]
-      y = bin(int(reg[B]))[2:]
-       if(len(x)) >= (len(y)):
-            y = y.zfill(len(x))
-        else:
-            x = x.zfill(len(y))
-        for i in range(0, len(y)):
-            nand_bit = ""
-            if(x[i:i+1] == "1" and y[i:i+1] == "1"):
-                nand_bit = nand_bit + "0"
-            else:
-                nand_bit = nand_bit + "1"
-        reg[dest] = nand_bit
+bit16= "0001000000000000"
+if int(bit16, 2) & (1 << 15):
+    for n in range(0, 16):
+        bit16 = "1" + bit16
+else:
+    for m in range(0, 16):
+        bit16 = "0" + bit16
+
+bit32 = bit16
+    
+print(bit32)
